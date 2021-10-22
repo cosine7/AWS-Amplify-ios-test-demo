@@ -31,7 +31,9 @@ class ViewController: UIViewController {
     
     private func updateSum() {
         guard let num1Text = num1.text,
-              let num2Text = num2.text
+              let num2Text = num2.text,
+              num1Text != "",
+              num2Text != ""
         else {
             return
         }
@@ -47,14 +49,13 @@ class ViewController: UIViewController {
         Amplify.API.get(request: request) { result in
             switch result {
             case .success(let data):
-                let jsonStr = String(decoding: data, as: UTF8.self)
                 do {
-                    let response = try self.decoder.decode(Response.self, from: Data(jsonStr.utf8))
+                    let response = try self.decoder.decode(Response.self, from: data)
                     DispatchQueue.main.async {
                         self.sum.text = "\(response.sum)"
                     }
                 } catch {
-                    print("unable to convert json to struct")
+                    print("unable to convert json to struct due to invalid input")
                 }
             case .failure(let apiError):
                 print("Failed", apiError)
@@ -62,7 +63,7 @@ class ViewController: UIViewController {
         }
     }
     
-    struct Response: Codable {
+    private struct Response: Codable {
         var message: String
         var sum: Int
     }
