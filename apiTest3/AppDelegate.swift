@@ -16,23 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         do {
             try Amplify.add(plugin: AWSAPIPlugin())
             try Amplify.configure()
-            let queryParameters = [
-                "num1": "1",
-                "num2": "2"
-            ]
-            let request = RESTRequest(
-                path: "/hello",
-                queryParameters: queryParameters
-            )
-            Amplify.API.get(request: request) { result in
-                switch result {
-                case .success(let data):
-                    let str = String(decoding: data, as: UTF8.self)
-                    print("Success \(str)")
-                case .failure(let apiError):
-                    print("Failed", apiError)
-                }
-            }
+            
             } catch {
                 print("An error occurred setting up Amplify: \(error)")
         }
